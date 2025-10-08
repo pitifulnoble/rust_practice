@@ -12,7 +12,9 @@ async fn main() {
         .route("/hello", get(hello))
         .route("/echo/:name", get(echo_path))
         .route("/sum", get(sum_query))
-        .route("/echo_json", post(echo_json));
+        .route("/echo_json", post(echo_json))
+        .route("/api/users/login", post(users_login))
+        ;
 
     let listener = tokio::net::TcpListener::bind(("127.0.0.1", 3001))
         .await
@@ -59,6 +61,14 @@ struct EchoOutput {
 async fn echo_json(Json(_body): Json<EchoInput>) -> impl IntoResponse {
     // Accepts JSON body but returns a fixed result
     Json(EchoOutput { status: "accepted" })
+}
+
+async fn users_login() -> impl IntoResponse {
+    Json(serde_json::json!({
+        "code": 0,
+        "message": "hello from rust-fist",
+        "data" : "user_login_token_by_rust"
+    }))
 }
 
 struct WorkFlow {
